@@ -1,10 +1,17 @@
 /* eslint-disable no-unused-vars */
 // src/LoginPage.js
+import { useNavigate } from "react-router-dom";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "./utils/firebase";
 import React, { useContext, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { contentManger } from "./utils/ContentManger";
 import { checkLog, checkCreate } from "./utils/FunctionCalls";
 const LoginPage = () => {
+  const nav = useNavigate();
   const { setUserName, loginId, loginStatus, setLoginStatus } =
     useContext(contentManger);
   const [loginType, setLoginType] = useState(true);
@@ -18,32 +25,39 @@ const LoginPage = () => {
     const error = checkLog(email, password);
     setErrorMessage(error);
     if (error != null) return;
-    setUserName(name);
-    setLoginStatus(!loginStatus);
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        // ...
+        setUserName(name);
+        setLoginStatus(!loginStatus);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        setErrorMessage("invalid credential");
+        console.log(errorCode, errorMessage);
+      });
   };
   const handleCreate = () => {
     const error = checkCreate(email, password, confirmPassword);
     setErrorMessage(error);
-    // if (error != null) return;
-    // const auth = getAuth();
-    // createUserWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     // Signed up
-    //     const user = userCredential.user;
-    //     // ...
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     // ..
-    //     setErrorMessage(errorMessage);
-    //     return;
-    //   });
-    setUserName(name);
-    setEmail("");
-    setPassword("");
-    setName("");
-    setUserName("Login");
+    if (error != null) return;
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed up
+        const user = userCredential.user;
+        // ...
+        setUserName(name);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        setErrorMessage("already in use");
+        console.log(errorCode, errorMessage);
+        // ..
+      });
     setLoginType(!loginType);
   };
   return (
@@ -58,7 +72,7 @@ const LoginPage = () => {
               type="button"
               className="p-1 bg-[#0387A1] text-[#111827] font-bold "
               onClick={() => {
-                handleLog();
+                setLoginType(!loginType);
               }}
             >
               Logout
@@ -121,7 +135,17 @@ const LoginPage = () => {
               Login
             </button>
           </div>
-          <h4 className="text-[#0387A1]">{errorMessage}</h4>
+          {errorMessage ? (
+            <div
+              class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+              role="alert"
+            >
+              <strong class="font-bold">Error:</strong>
+              <span class="block sm:inline">{errorMessage}</span>
+            </div>
+          ) : (
+            ""
+          )}
           <div
             className="my-4 px-4 text-[#0387A1] cursor-pointer"
             onClick={() => {
@@ -197,7 +221,17 @@ const LoginPage = () => {
               Create
             </button>
           </div>
-          <h4 className="text-[#0387A1]">{errorMessage}</h4>
+          {errorMessage ? (
+            <div
+              class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+              role="alert"
+            >
+              <strong class="font-bold">Error:</strong>
+              <span class="block sm:inline">{errorMessage}</span>
+            </div>
+          ) : (
+            ""
+          )}
           <div
             className="my-4 px-4 text-[#0387A1] cursor-pointer"
             onClick={() => {
