@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signOut,
 } from "firebase/auth";
+
 import { auth } from "./utils/firebase";
 import React, { useContext, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
@@ -21,6 +23,7 @@ const LoginPage = () => {
   const [name, setName] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
   const handleLog = () => {
     const error = checkLog(email, password);
     setErrorMessage(error);
@@ -32,12 +35,26 @@ const LoginPage = () => {
         // ...
         setUserName(name);
         setLoginStatus(!loginStatus);
+        navigate("/");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         setErrorMessage("invalid credential");
         console.log(errorCode, errorMessage);
+      });
+  };
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        console.log("hi");
+        setUserName("user");
+        setLoginType(!loginType);
+        setLoginStatus(!loginStatus);
+      })
+      .catch((error) => {
+        // An error happened.
       });
   };
   const handleCreate = () => {
@@ -49,7 +66,6 @@ const LoginPage = () => {
         // Signed up
         const user = userCredential.user;
         // ...
-        setUserName(name);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -72,7 +88,7 @@ const LoginPage = () => {
               type="button"
               className="p-1 bg-[#0387A1] text-[#111827] font-bold "
               onClick={() => {
-                setLoginType(!loginType);
+                handleLogout();
               }}
             >
               Logout
@@ -235,7 +251,7 @@ const LoginPage = () => {
           <div
             className="my-4 px-4 text-[#0387A1] cursor-pointer"
             onClick={() => {
-              handleCreate();
+              setLoginType(!loginType);
             }}
           >
             if Already User ? Sign in
