@@ -8,6 +8,12 @@ import { useContext } from "react";
 import { contentManger } from "./utils/ContentManger";
 import { useSelector } from "react-redux";
 const Header = () => {
+  // useEffect(() => {
+  //   if (!loginStatus) {
+  //     navigate("/login")
+  //   }
+  // }, [])
+  const { loginStatus } = useContext(contentManger)
   const [locationText, setLocationText] = useState("Mumbai");
   const [restaurant, setRestaurant] = useState("");
   const [locationBar, setLocationBar] = useState(false);
@@ -27,7 +33,7 @@ const Header = () => {
   return (
     <div className="w-screen flex p-4 bg-gray-900 items-center justify-between">
       <div className="flex gap-3 w-[348px]">
-        <Link to="/mumbai">
+        <Link to={!loginStatus ? "/login" : "/mumbai"}>
           <div className="flex items-center">
             <img src={logo} alt="Logo" className="h-12" />
             <h2 className="text-[#0387A1] font-bold text-xl">Parcel</h2>
@@ -48,7 +54,7 @@ const Header = () => {
                     setLocationText(e.target.value);
                   }}
                 />
-                <Link to={`/${locationText}`}>
+                <Link to={!loginStatus ? "/login" : `/${locationText}`}>
                   <button
                     type="button"
                     onClick={() => {
@@ -107,14 +113,14 @@ const Header = () => {
             </button>
           </div>
         </Link>
-        <Link to="/contact">
+        <Link to={!loginStatus ? "/login" : "/contact"}>
           <div className="contact">
             <button type="button">
               <i className="bi bi-info-circle-fill"></i> Contact
             </button>
           </div>
         </Link>
-        <Link to="/cart">
+        <Link to={!loginStatus ? "/login" : "/cart"}>
           <div className="cart flex">
             <button type="button" className="relative gap-2">
               <div className="display-contents">

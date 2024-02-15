@@ -33,6 +33,7 @@ const LoginPage = () => {
         // Signed in
         const user = userCredential.user;
         // ...
+        console.log(user);
         setUserName(name);
         setLoginStatus(!loginStatus);
         navigate("/");

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { createRoot } from "react-dom/client"; // Correct import statement
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, Outlet, RouterProvider, useNavigate } from "react-router-dom";
 import { StrictMode } from "react";
 import Header from "./Header";
 import Main from "./Main";
@@ -19,7 +19,14 @@ import { Provider } from 'react-redux';
 import { Store } from "./utils/Store";
 const Instamart = lazy(() => import("./Instamart"));
 
+
 function App() {
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (!loginStatus) {
+      navigate("/login")
+    }
+  }, [])
   const [userName, setUserName] = useState("Login");
   const [loginStatus, setLoginStatus] = useState(false);
   return (
