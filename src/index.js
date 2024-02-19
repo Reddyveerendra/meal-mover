@@ -24,7 +24,7 @@ function App() {
   const navigate = useNavigate()
   useEffect(() => {
     if (!loginStatus) {
-      navigate("/login")
+      navigate("/undefined/334353")
     }
   }, [])
   const [userName, setUserName] = useState("Login");

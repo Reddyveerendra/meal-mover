@@ -6,14 +6,15 @@ import {
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-
+import { UseDispatch, useSelector } from "react-redux";
+import { UseSelector } from "react-redux";
+import { updateUser } from "./utils/CartSlice";
 import { auth } from "./utils/firebase";
 import React, { useContext, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { contentManger } from "./utils/ContentManger";
 import { checkLog, checkCreate } from "./utils/FunctionCalls";
 const LoginPage = () => {
-  const nav = useNavigate();
   const { setUserName, loginId, loginStatus, setLoginStatus } =
     useContext(contentManger);
   const [loginType, setLoginType] = useState(true);

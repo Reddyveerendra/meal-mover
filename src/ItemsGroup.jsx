@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -23,7 +24,7 @@ const ItemsGroup = (props) => {
           <h5>{props.cat.title}</h5>
           <i className="bi bi-arrows-expand"></i>
         </div>
-        {props.i == props.popDis ? (
+        {props.i === props.popDis ? (
           <div className="p-[8px]">
             {itemsList.map((item, i) => (
               <div key={i}>
